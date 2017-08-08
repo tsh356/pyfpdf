@@ -1780,7 +1780,7 @@ class FPDF(object):
                 f = BytesIO(urlopen(filename).read())
                 print(f)
             else:
-                print("not http or https)
+                print("not http or https")
                 f = open(filename, "rb")
             return f
         else:

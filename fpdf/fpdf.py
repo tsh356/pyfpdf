@@ -1776,8 +1776,11 @@ class FPDF(object):
         # by default loading from network is allowed for all images
         if reason == "image":
             if filename.startswith("http://") or filename.startswith("https://"):
+                print("http or https")
                 f = BytesIO(urlopen(filename).read())
+                print(f)
             else:
+                print("not http or https)
                 f = open(filename, "rb")
             return f
         else:

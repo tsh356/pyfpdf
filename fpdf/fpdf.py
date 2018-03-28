@@ -1771,21 +1771,37 @@ class FPDF(object):
         w=self.get_string_width(txt, True)+self.ws*txt.count(' ')
         return sprintf('%.2f %.2f %.2f %.2f re f',x*self.k,(self.h-(y-up/1000.0*self.font_size))*self.k,w*self.k,-ut/1000.0*self.font_size_pt)
 
+#     def load_resource(self, reason, filename):
+#         "Load external file"
+#         # by default loading from network is allowed for all images
+#         if reason == "image":
+#             if filename.startswith("http://") or filename.startswith("https://"):
+#                 print("http or https")
+#                 f = BytesIO(urlopen(filename).read())
+#                 print(f)
+#             else:
+#                 print("not http or https")
+#                 f = open(filename, "rb")
+#             return f
+#         else:
+#             self.error("Unknown resource loading reason \"%s\"" % reason)
+    
     def load_resource(self, reason, filename):
-        "Load external file"
-        # by default loading from network is allowed for all images
         if reason == "image":
-            if filename.startswith("http://") or filename.startswith("https://"):
-                print("http or https")
+            if not isinstance(filename, str):
+                f = filename
+            elif filename.startswith("http://") or filename.startswith("https://"):
                 f = BytesIO(urlopen(filename).read())
-                print(f)
+            elif filename.startswith("data"):
+                f = filename.split('base64,')[1]
+                f = base64.b64decode(f)
+                f = io.BytesIO(f)
             else:
-                print("not http or https")
                 f = open(filename, "rb")
             return f
         else:
             self.error("Unknown resource loading reason \"%s\"" % reason)
-
+    
     def _parsejpg(self, filename):
         # Extract info from a JPEG file
         f = None
